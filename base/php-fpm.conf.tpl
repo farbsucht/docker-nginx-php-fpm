@@ -1,3 +1,6 @@
+[global]
+error_log = /var/log/php5.6-fpm.log
+
 [www]
 
 pm = dynamic
@@ -15,3 +18,5 @@ listen = $PHP_SOCK_FILE
 listen.owner = $PHP_USER
 listen.group = $PHP_GROUP
 listen.mode = $PHP_MODE
+
+php_admin_flag[log_errors] = on

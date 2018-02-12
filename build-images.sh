@@ -3,5 +3,4 @@
 set -x
 set -e
 
-(cd base && docker build --rm  --pull  -t formapro/nginx-php-fpm:latest .)
-(cd php-all-exts && docker build --rm -t formapro/nginx-php-fpm:latest-all-exts .)
+(cd base && docker build --rm  --pull  -t beanieboi/nginx-php-fpm:5.6 .)

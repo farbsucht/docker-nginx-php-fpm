@@ -36,20 +36,22 @@ http {
         location / {
             try_files $uri $NGINX_PHP_FALLBACK$is_args$args;
         }
-        location ~ $NGINX_PHP_LOCATION {
+
+        location ~ [^/]\.php(/|$) {
+            fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+            if (!-f $document_root$fastcgi_script_name) {
+                return 404;
+            }
+
+            fastcgi_param HTTP_PROXY "";
+
             fastcgi_pass unix:$PHP_SOCK_FILE;
-            fastcgi_split_path_info ^(.+\.php)(/.*)$;
+            fastcgi_index index.php;
+
+            # include the fastcgi_param setting
             include fastcgi_params;
-            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-            fastcgi_param DOCUMENT_ROOT $realpath_root;
 
-            internal;
-        }
-
-        # return 404 for all other php files not matching the front controller
-        # this prevents access to other php files you don't want to be accessible.
-        location ~ \.php$ {
-          return 404;
+            fastcgi_param  SCRIPT_FILENAME   $document_root$fastcgi_script_name;
         }
     }
 }

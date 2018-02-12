@@ -12,23 +12,39 @@ RUN apt-get update && \
 
 RUN apt-get update && \
     apt-get remove php7.0 && \
-    apt-get install -y --no-install-recommends --no-install-suggests nginx php7.2 php7.2-fpm php7.2-cli php7.2-common ca-certificates gettext && \
+    apt-get install -y --no-install-recommends \
+    php5.6-bcmath \
+    php5.6-cgi \
+    php5.6-cli \
+    php5.6-common \
+    php5.6-fpm \
+    php5.6-gd \
+    php5.6-json \
+    php5.6-mbstring \
+    php5.6-mcrypt \
+    php5.6-mysql \
+    php5.6-opcache \
+    php5.6-readline \
+    php5.6-xcache \
+    php5.6-xml \
+    nginx \
+    ca-certificates gettext && \
     rm -rf /var/lib/apt/lists/*
 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stderr /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log \
-	&& ln -sf /dev/stderr /var/log/php7.2-fpm.log \
+	&& ln -sf /dev/stderr /var/log/php5.6-fpm.log \
 	&& ln -sf /dev/stderr /var/log/php-fpm.log
 
 RUN rm -f /etc/nginx/sites-enabled/*
 
 COPY nginx.conf.tpl /tmp/nginx.conf.tpl
 COPY php-fpm.conf.tpl /tmp/php-fpm.conf.tpl
-COPY defaults.ini /etc/php/7.2/cli/conf.d/defaults.ini
-COPY defaults.ini /etc/php/7.2/fpm/conf.d/defaults.ini
+COPY defaults.ini /etc/php/5.6/cli/conf.d/defaults.ini
+COPY defaults.ini /etc/php/5.6/fpm/conf.d/defaults.ini
 
-RUN mkdir -p /run/php && touch /run/php/php7.2-fpm.sock && touch /run/php/php7.2-fpm.pid
+RUN mkdir -p /run/php && touch /run/php/php5.6-fpm.sock && touch /run/php/php5.6-fpm.pid
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
